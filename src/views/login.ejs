@@ -18,6 +18,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
 
   <style>
@@ -40,54 +41,81 @@
     }
   </style>
 
+  <script>
+    $(document).ready(function () {
+      $("#btnLogin").on("click", function () {
+        const username = $("#username").val();
+        const password = $("#password").val();
+
+        $.ajax({
+          type: "POST",
+          url: `${window.location.origin}/login`,
+          data: {
+            username,
+            password,
+          },
+          cache: false,
+          success: function (data) {
+            console.log("🏆 ~ data:", data);
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+      });
+    });
+  </script>
   <body>
     <div class="container">
       <div class="row">
-        <form action="/login" method="POST">
-          <div class="login-container col-6 mx-auto">
-            <fieldset class="border rounded-3 p-3">
-              <legend class="float-none w-auto my-3">Login Form:</legend>
-              <% if (error) { %>
-              <div class="alert alert-danger" role="alert"><%= error %></div>
-              <% } %>
+        <div class="login-container col-6 mx-auto">
+          <fieldset class="border rounded-3 p-3">
+            <legend class="float-none w-auto my-3">Login Form:</legend>
+            <!-- <div class="alert alert-danger" role="alert">error</div> -->
 
-              <div class="mb-3">
-                <label>Username</label>
+            <div class="mb-3">
+              <label>Username</label>
 
-                <div class="input-group has-validation">
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="username"
-                    value="<%= usernameInput %>"
-                  />
-                  <div class="invalid-feedback">Please choose a username.</div>
-                </div>
+              <div class="input-group has-validation">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="username"
+                  id="username"
+                />
+                <div class="invalid-feedback">Please choose a username.</div>
               </div>
-              <div class="mb-3">
-                <label>Password</label>
+            </div>
+            <div class="mb-3">
+              <label>Password</label>
 
-                <div class="input-group has-validation">
-                  <input type="password" class="form-control" name="password" />
-                  <div class="invalid-feedback">Please choose a username.</div>
-                </div>
+              <div class="input-group has-validation">
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  id="password"
+                />
+                <div class="invalid-feedback">Please choose a username.</div>
+              </div>
+            </div>
+
+            <button type="button" id="btnLogin" class="btn btn-primary">
+              Login
+            </button>
+            <hr />
+            <div>
+              <div style="text-align: center">
+                <span>or Login with:</span>
               </div>
 
-              <button type="submit" class="btn btn-primary">Login</button>
-              <hr />
-              <div>
-                <div style="text-align: center">
-                  <span>or Login with:</span>
-                </div>
-
-                <div class="social" style="text-align: center">
-                  <i class="bi bi-google" title="Login with Google"></i>
-                  <i class="bi bi-facebook" title="Login with Facebook"></i>
-                </div>
+              <div class="social" style="text-align: center">
+                <i class="bi bi-google" title="Login with Google"></i>
+                <i class="bi bi-facebook" title="Login with Facebook"></i>
               </div>
-            </fieldset>
-          </div>
-        </form>
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
   </body>

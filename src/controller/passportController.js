@@ -18,11 +18,7 @@ const configPassport = () => {
         if (res && +res.EC === 0) {
           return cb(null, res.DT);
         } else {
-          return cb(
-            null,
-            false,
-            req.flash("message", [res.EM, username, res.EC])
-          );
+          return cb(null, false, { message: res.EM });
         }
       }
     )
