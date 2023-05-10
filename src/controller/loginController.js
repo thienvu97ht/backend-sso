@@ -1,5 +1,10 @@
 const getLoginPage = (req, res) => {
-  return res.render("login.ejs");
+  const arrMessage = req.flash("message");
+
+  return res.render("login.ejs", {
+    error: arrMessage[0],
+    usernameInput: arrMessage[1],
+  });
 };
 
 module.exports = {

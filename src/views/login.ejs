@@ -34,6 +34,10 @@
       cursor: pointer;
       padding: 0 7px;
     }
+
+    .login-container {
+      padding-top: 50px;
+    }
   </style>
 
   <body>
@@ -42,27 +46,31 @@
         <form action="/login" method="POST">
           <div class="login-container col-6 mx-auto">
             <fieldset class="border rounded-3 p-3">
-              <legend class="float-none w-auto px-3">Login Form:</legend>
+              <legend class="float-none w-auto my-3">Login Form:</legend>
+              <% if (error) { %>
+              <div class="alert alert-danger" role="alert"><%= error %></div>
+              <% } %>
+
               <div class="mb-3">
-                <label>Email address</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  name="username"
-                  placeholder="Enter email"
-                />
-                <small id="emailHelp" class="form-text text-muted"
-                  >We'll never share your email with anyone else.</small
-                >
+                <label>Username</label>
+
+                <div class="input-group has-validation">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="username"
+                    value="<%= usernameInput %>"
+                  />
+                  <div class="invalid-feedback">Please choose a username.</div>
+                </div>
               </div>
               <div class="mb-3">
                 <label>Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  name="password"
-                  placeholder="Password"
-                />
+
+                <div class="input-group has-validation">
+                  <input type="password" class="form-control" name="password" />
+                  <div class="invalid-feedback">Please choose a username.</div>
+                </div>
               </div>
 
               <button type="submit" class="btn btn-primary">Login</button>
