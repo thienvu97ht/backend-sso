@@ -2,6 +2,7 @@ import express from "express";
 import homeController from "../controller/homeController";
 import apiController from "../controller/apiController";
 import loginController from "../controller/loginController";
+import passportController from "../controller/passportController";
 import passport from "passport";
 import checkUser from "../middleware/checkUser";
 
@@ -34,6 +35,8 @@ const initWebRoutes = (app) => {
       failureRedirect: "/login",
     })
   );
+
+  router.post("/logout", passportController.handleLogout);
 
   return app.use("/", router);
 };

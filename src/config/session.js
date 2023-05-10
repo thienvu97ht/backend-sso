@@ -19,11 +19,14 @@ const configSession = (app) => {
       define: {
         freezeTableName: true,
       },
+      timezone: "+07:00",
     }
   );
 
   const myStore = new SequelizeStore({
     db: sequelize,
+    checkExpirationInterval: 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
+    expiration: 300 * 1000,
   });
 
   app.use(
@@ -33,6 +36,9 @@ const configSession = (app) => {
       resave: false, // we support the touch method so per the express-session docs this should be set to false
       proxy: true, // if you do SSL outside of node.
       saveUninitialized: false,
+      cookie: {
+        expires: 300 * 1000,
+      },
     })
   );
 

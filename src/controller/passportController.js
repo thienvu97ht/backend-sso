@@ -20,6 +20,14 @@ const configPassport = () => {
   );
 };
 
+const handleLogout = (req, res) => {
+  req.session.destroy(function (err) {
+    // req.logout();
+    res.redirect("/"); //Inside a callback… bulletproof!
+  });
+};
+
 module.exports = {
   configPassport,
+  handleLogout,
 };
