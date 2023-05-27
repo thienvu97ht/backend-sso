@@ -43,6 +43,7 @@ const handleRegister = async (req, res) => {
 };
 
 const handleLogin = async (req, res) => {
+  console.log("vao day ne");
   try {
     let data = await loginRegisterService.handleUserLogin(req.body);
     //set cookie

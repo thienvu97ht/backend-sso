@@ -3,6 +3,8 @@ import LocalStrategy from "passport-local";
 import loginRegisterService from "../service/loginRegisterService";
 
 const configPassport = () => {
+  console.log("configPassport");
+
   passport.use(
     new LocalStrategy(
       {

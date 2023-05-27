@@ -4,6 +4,8 @@ import sequelizeStore from "connect-session-sequelize";
 import passport from "passport";
 
 const configSession = (app) => {
+  console.log("configSession");
+
   // initialize sequelize with session store
   const SequelizeStore = sequelizeStore(Store);
 
@@ -46,13 +48,17 @@ const configSession = (app) => {
 
   app.use(passport.authenticate("session"));
 
+  // Chỉnh sửa input đầu vào để lưu vào database
   passport.serializeUser(function (user, cb) {
+    console.log("🏆 before ~ user:", user);
     process.nextTick(function () {
       cb(null, user);
     });
   });
 
+  // Lưu vào req.user
   passport.deserializeUser(function (user, cb) {
+    console.log("🏆 after ~ user:", user);
     process.nextTick(function () {
       return cb(null, user);
     });
