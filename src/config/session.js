@@ -52,7 +52,6 @@ const configSession = (app) => {
 
   // Chỉnh sửa input đầu vào để lưu vào database
   passport.serializeUser(function (user, cb) {
-    console.log("🏆 before ~ user:", user);
     process.nextTick(function () {
       cb(null, user);
     });
@@ -60,7 +59,6 @@ const configSession = (app) => {
 
   // Giải mã và lưu vào req.user
   passport.deserializeUser(function (user, cb) {
-    console.log("🏆 after ~ user:", user);
     process.nextTick(function () {
       return cb(null, user);
     });
