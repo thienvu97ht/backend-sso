@@ -25,12 +25,14 @@ const configSession = (app) => {
     }
   );
 
+  // Cấu hình session lưu vào db
   const myStore = new SequelizeStore({
     db: sequelize,
     checkExpirationInterval: 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
-    expiration: 300 * 1000,
+    expiration: 30 * 1000,
   });
 
+  // Cấu hình session trả về client
   app.use(
     session({
       secret: "keyboard cat",
@@ -39,7 +41,7 @@ const configSession = (app) => {
       proxy: true, // if you do SSL outside of node.
       saveUninitialized: false,
       cookie: {
-        expires: 300 * 1000,
+        expires: 30 * 1000,
       },
     })
   );
@@ -56,7 +58,7 @@ const configSession = (app) => {
     });
   });
 
-  // Lưu vào req.user
+  // Giải mã và lưu vào req.user
   passport.deserializeUser(function (user, cb) {
     console.log("🏆 after ~ user:", user);
     process.nextTick(function () {

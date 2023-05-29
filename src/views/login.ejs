@@ -39,39 +39,25 @@
     .login-container {
       padding-top: 50px;
     }
+
+    .none-flash {
+      display: none;
+    }
   </style>
 
-  <script>
-    $(document).ready(function () {
-      $("#btnLogin").on("click", function () {
-        const username = $("#username").val();
-        const password = $("#password").val();
-
-        $.ajax({
-          type: "POST",
-          url: `${window.location.origin}/login`,
-          data: {
-            username,
-            password,
-          },
-          cache: false,
-          success: function (data) {
-            console.log("🏆 ~ data:", data);
-          },
-          error: function (error) {
-            console.log(error);
-          },
-        });
-      });
-    });
-  </script>
   <body>
     <div class="container">
       <div class="row">
         <div class="login-container col-6 mx-auto">
           <fieldset class="border rounded-3 p-3">
             <legend class="float-none w-auto my-3">Login Form:</legend>
-            <!-- <div class="alert alert-danger" role="alert">error</div> -->
+            <div
+              class="alert alert-danger my-1 none-flash"
+              role="alert"
+              id="flashMsg"
+            >
+              error
+            </div>
 
             <div class="mb-3">
               <label>Username</label>
@@ -119,4 +105,35 @@
       </div>
     </div>
   </body>
+
+  <script>
+    $(document).ready(function () {
+      $("#btnLogin").on("click", function () {
+        const username = $("#username").val();
+        const password = $("#password").val();
+
+        $.ajax({
+          type: "POST",
+          url: `${window.location.origin}/login`,
+          data: {
+            username,
+            password,
+          },
+          withCredentials: true,
+          success: function (data) {
+            $("#flashMsg").addClass("none-flash");
+            window.location.href = "/";
+          },
+          error: function (request, status, error) {
+            $("#password").val("");
+            $("#flashMsg").removeClass("none-flash");
+            $("#flashMsg").text(request.responseText);
+
+            console.log("error: ", error);
+            console.log("request: ", request.responseText);
+          },
+        });
+      });
+    });
+  </script>
 </html>

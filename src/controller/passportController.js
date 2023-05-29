@@ -16,6 +16,7 @@ const configPassport = () => {
           password: password,
         };
 
+        console.log("login vao day ne");
         let res = await loginRegisterService.handleUserLogin(rawData);
         if (res && +res.EC === 0) {
           return cb(null, res.DT);
