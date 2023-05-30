@@ -1,10 +1,9 @@
 require("dotenv").config();
-import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
-import { getGroupWithRoles } from "./JWTService";
-import { createJWT } from "../middleware/JWTAction";
 import { v4 as uuidv4 } from "uuid";
+import db from "../models/index";
+import { getGroupWithRoles } from "./JWTService";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -93,22 +92,15 @@ const handleUserLogin = async (rawData) => {
       let isCorrectPassword = checkPassword(rawData.password, user.password);
       if (isCorrectPassword === true) {
         const code = uuidv4();
-        // let groupWithRoles = await getGroupWithRoles(user);
-        // let payload = {
-        //   email: user.email,
-        //   groupWithRoles,
-        //   username: user.username,
-        // };
-        // let token = createJWT(payload);
+        let groupWithRoles = await getGroupWithRoles(user);
         return {
           EM: "ok!",
           EC: 0,
           DT: {
-            // access_token: token,
-            // groupWithRoles,
-            // email: user.email,
-            // username: user.username,
+            groupWithRoles,
+            username: user.username,
             code: code,
+            email: user.email,
           },
         };
       } else {
@@ -135,10 +127,26 @@ const handleUserLogin = async (rawData) => {
   }
 };
 
+const updateUserRefreshToken = async (email, token) => {
+  try {
+    await db.User.update(
+      {
+        refreshToken: token,
+      },
+      {
+        where: { email },
+      }
+    );
+  } catch (error) {
+    console.log("🏆 ~ updateUserRefreshToken ~ error:", error);
+  }
+};
+
 module.exports = {
   registerNewUser,
   handleUserLogin,
   hashUserPassword,
   checkEmailExist,
   checkPhoneExist,
+  updateUserRefreshToken,
 };

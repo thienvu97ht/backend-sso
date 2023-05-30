@@ -27,7 +27,7 @@ const configSession = (app) => {
   const myStore = new SequelizeStore({
     db: sequelize,
     checkExpirationInterval: 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
-    expiration: 30 * 1000,
+    expiration: 5 * 60 * 1000,
   });
 
   // Cấu hình session trả về client
@@ -39,7 +39,7 @@ const configSession = (app) => {
       proxy: true, // if you do SSL outside of node.
       saveUninitialized: false,
       cookie: {
-        expires: 30 * 1000,
+        expires: 5 * 60 * 1000,
       },
     })
   );
