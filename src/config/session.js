@@ -4,8 +4,6 @@ import sequelizeStore from "connect-session-sequelize";
 import passport from "passport";
 
 const configSession = (app) => {
-  console.log("configSession");
-
   // initialize sequelize with session store
   const SequelizeStore = sequelizeStore(Store);
 

@@ -46,6 +46,7 @@
   </style>
 
   <body>
+    <input value="<%= redirectURL %>" hidden id="redirectURL" />
     <div class="container">
       <div class="row">
         <div class="login-container col-6 mx-auto">
@@ -111,6 +112,7 @@
       $("#btnLogin").on("click", function () {
         const username = $("#username").val();
         const password = $("#password").val();
+        const serviceURL = $("#redirectURL").val();
 
         $.ajax({
           type: "POST",
@@ -118,11 +120,14 @@
           data: {
             username,
             password,
+            serviceURL,
           },
           withCredentials: true,
           success: function (data) {
             $("#flashMsg").addClass("none-flash");
-            window.location.href = "/";
+
+            const redirectURL = `${data.redirectURL}/code?ssoToken=${data.code}`;
+            window.location.href = redirectURL;
           },
           error: function (request, status, error) {
             $("#password").val("");
