@@ -38,14 +38,14 @@ const verifySSOToken = async (req, res) => {
         httpOnly: true,
       });
 
-      res.cookie("refresh_toke", refreshToken, {
+      res.cookie("refresh_token", refreshToken, {
         maxAge: process.env.MAX_AGE_REFRESH_TOKEN, // 1h
         httpOnly: true,
       });
 
       const resData = {
         access_token: token,
-        refresh_toke: refreshToken,
+        refresh_token: refreshToken,
         groupWithRoles: req.user.groupWithRoles,
         email: req.user.email,
         username: req.user.username,
