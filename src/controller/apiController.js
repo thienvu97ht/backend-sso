@@ -70,7 +70,8 @@ const handleLogin = async (req, res) => {
 
 const handleLogout = (req, res) => {
   try {
-    res.clearCookie("jwt");
+    res.clearCookie("refresh_token");
+    res.clearCookie("access_token");
     return res.status(200).json({
       EM: "clear cookies done!", // error message
       EC: 0, //error code
