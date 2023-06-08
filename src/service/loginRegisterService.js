@@ -145,27 +145,22 @@ const updateUserRefreshToken = async (email, token) => {
 const upsertUserSocialMedial = async (typeAcc, dataRaw) => {
   try {
     let user = null;
-    if (typeAcc === "GOOGLE") {
-      user = await db.User.findOne({
-        where: {
-          email: dataRaw.email,
-          type: typeAcc,
-        },
-        raw: true,
+    user = await db.User.findOne({
+      where: {
+        email: dataRaw.email,
+        type: typeAcc,
+      },
+      raw: true,
+    });
+    if (!user) {
+      // create new account
+      user = await db.User.create({
+        email: dataRaw.email,
+        username: dataRaw.username,
+        type: typeAcc,
       });
-
-      if (!user) {
-        // create new account
-        user = await db.User.create({
-          email: dataRaw.email,
-          username: dataRaw.username,
-          type: typeAcc,
-        });
-
-        user = user.get({ plain: true });
-      }
+      user = user.get({ plain: true });
     }
-
     return user;
   } catch (error) {
     console.log("🏆 ~ loi roi ne", error);

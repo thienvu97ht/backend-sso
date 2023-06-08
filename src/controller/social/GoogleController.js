@@ -2,6 +2,7 @@ require("dotenv").config();
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import loginRegisterService from "../../service/loginRegisterService";
+import { v4 as uuidv4 } from "uuid";
 
 const configLoginWithGoogle = () => {
   passport.use(
@@ -12,17 +13,17 @@ const configLoginWithGoogle = () => {
         callbackURL: process.env.GOOGLE_APP_REDIRECT_LOGIN,
       },
       async function (accessToken, refreshToken, profile, cb) {
-        const type = "GOOGLE";
+        const typeAcc = "GOOGLE";
         const dataRaw = {
           username: profile.displayName,
           email: profile._json.email,
-          googleId: profile.id,
         };
 
         let user = await loginRegisterService.upsertUserSocialMedial(
-          type,
+          typeAcc,
           dataRaw
         );
+        user.code = uuidv4();
         return cb(null, user);
       }
     )

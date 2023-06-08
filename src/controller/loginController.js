@@ -15,6 +15,7 @@ const verifySSOToken = async (req, res) => {
   try {
     const ssoToken = req.body.ssoToken;
 
+    console.log("req.user: ", req.user);
     if (req.user && req.user.code && req.user.code === ssoToken) {
       const refreshToken = uuidv4();
 

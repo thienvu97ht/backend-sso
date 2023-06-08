@@ -97,13 +97,17 @@
               </div>
 
               <div class="social" style="text-align: center">
-                <a href="/auth/google">
-                  <i class="bi bi-google" title="Login with Google"></i>
-                </a>
+                <i
+                  id="iconGoogle"
+                  class="bi bi-google"
+                  title="Login with Google"
+                ></i>
 
-                <a href="">
-                  <i class="bi bi-facebook" title="Login with Facebook"></i>
-                </a>
+                <i
+                  id="iconFacebook"
+                  class="bi bi-facebook"
+                  title="Login with Facebook"
+                ></i>
               </div>
             </div>
           </fieldset>
@@ -143,6 +147,20 @@
             console.log("request: ", request.responseText);
           },
         });
+      });
+
+      $("#iconGoogle").on("click", function () {
+        localStorage.removeItem("clientURL");
+        localStorage.setItem("clientURL", $("#redirectURL").val());
+
+        window.location.href = "/auth/google";
+      });
+
+      $("#iconFacebook").on("click", function () {
+        localStorage.removeItem("clientURL");
+        localStorage.setItem("clientURL", $("#redirectURL").val());
+
+        window.location.href = "/auth/facebook";
       });
     });
   </script>
