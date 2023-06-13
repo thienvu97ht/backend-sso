@@ -13,9 +13,10 @@ const getLoginPage = (req, res) => {
 
 const verifySSOToken = async (req, res) => {
   try {
+    // return jwt, refresh token
     const ssoToken = req.body.ssoToken;
 
-    console.log("req.user: ", req.user);
+    // check ssoToken
     if (req.user && req.user.code && req.user.code === ssoToken) {
       const refreshToken = uuidv4();
 
@@ -27,8 +28,8 @@ const verifySSOToken = async (req, res) => {
 
       // create jwt token
       let payload = {
-        groupWithRoles: req.user.groupWithRoles,
         email: req.user.email,
+        groupWithRoles: req.user.groupWithRoles,
         username: req.user.username,
       };
       let token = createJWT(payload);
