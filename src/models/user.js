@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       phone: DataTypes.STRING,
       groupId: DataTypes.INTEGER,
       refreshToken: DataTypes.STRING,
+      code: DataTypes.STRING,
     },
     {
       sequelize,
