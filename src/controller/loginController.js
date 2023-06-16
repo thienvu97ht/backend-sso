@@ -1,6 +1,8 @@
+import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import { createJWT } from "../middleware/JWTAction";
 import loginRegisterService from "../service/loginRegisterService";
+
 require("dotenv").config();
 
 const getLoginPage = (req, res) => {
@@ -84,9 +86,46 @@ const getResetPasswordPage = (req, res) => {
   return res.render("forgot-password.ejs");
 };
 
-const sendCode = (req, res) => {
+const sendCode = async (req, res) => {
   // validate email, check type account equal LOCAL
+
   // send code via email
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.GOOGLE_APP_EMAIL, // generated ethereal user
+      pass: process.env.GOOGLE_APP_PASSWORD, // generated ethereal password
+    },
+  });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  // send mail with defined transport object
+  try {
+    await transporter.sendMail({
+      from: '"Vũ đẹp trai 👻" <foo@example.com>', // sender address
+      to: req.body.email, // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "Hello world?", // plain text body
+      html: `
+      <div>Bạn nhận được email này o yêu cầu reset lại mật khẩu SSO</div>\
+      <br/>
+      <div>
+        Your OTP: ${otp}
+      </div>
+      `,
+    });
+
+    // update code in database
+    await loginRegisterService.updateUserCode(otp, req.body.email);
+
+    console.log(">>> END SENDING EMAIL...");
+  } catch (error) {
+    console.log("🏆 ~ sendCode ~ error:", error);
+  }
+
   return res.status(200).json({
     EC: 0,
     DT: {
