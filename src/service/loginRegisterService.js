@@ -85,6 +85,7 @@ const handleUserLogin = async (rawData) => {
     let user = await db.User.findOne({
       where: {
         [Op.or]: [{ email: rawData.valueLogin }, { phone: rawData.valueLogin }],
+        type: "LOCAL",
       },
     });
 
@@ -198,11 +199,58 @@ const updateUserCode = async (code, email) => {
         code: code,
       },
       {
-        where: { email: email.trim() },
+        where: { email: email.trim(), type: "LOCAL" },
       }
     );
   } catch (error) {
     console.log("🏆 ~ updateUserRefreshToken ~ error:", error);
+  }
+};
+
+const isEmailLocal = async (email) => {
+  try {
+    let user = await db.User.findOne({
+      where: {
+        email: email,
+        type: "LOCAL",
+      },
+    });
+
+    if (!!user) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("🏆 ~ isEmailLocal ~ error:", error);
+  }
+};
+
+const resetUserPassword = async (rawData) => {
+  try {
+    let newPassword = hashUserPassword(rawData.newPassword);
+
+    let [count] = await db.User.update(
+      {
+        password: newPassword,
+      },
+      {
+        where: {
+          email: rawData.email,
+          type: "LOCAL",
+          code: rawData.code,
+        },
+      }
+    );
+
+    if (count > 0) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+    console.log("🏆 ~ resetUserPassword ~ error:", error);
   }
 };
 
@@ -216,4 +264,6 @@ module.exports = {
   upsertUserSocialMedial,
   getUserByRefreshToken,
   updateUserCode,
+  isEmailLocal,
+  resetUserPassword,
 };
