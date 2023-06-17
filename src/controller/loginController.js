@@ -2,6 +2,9 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import { createJWT } from "../middleware/JWTAction";
 import loginRegisterService from "../service/loginRegisterService";
+import * as handlebars from "handlebars";
+import * as fs from "fs";
+import * as path from "path";
 
 require("dotenv").config();
 
@@ -90,6 +93,16 @@ const sendCode = async (req, res) => {
   // validate email, check type account equal LOCAL
 
   // send code via email
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  const filePath = path.join(__dirname, "../templates/reset-password.html");
+  const source = fs.readFileSync(filePath, "utf-8").toString();
+  const template = handlebars.compile(source);
+  const replacements = {
+    email: req.body.email,
+    otp: otp,
+  };
+  const htmlToSend = template(replacements);
+
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -101,37 +114,31 @@ const sendCode = async (req, res) => {
     },
   });
 
-  const otp = Math.floor(100000 + Math.random() * 900000);
-  // send mail with defined transport object
-  try {
-    await transporter.sendMail({
-      from: '"Vũ đẹp trai 👻" <foo@example.com>', // sender address
-      to: req.body.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "Hello world?", // plain text body
-      html: `
-      <div>Bạn nhận được email này o yêu cầu reset lại mật khẩu SSO</div>\
-      <br/>
-      <div>
-        Your OTP: ${otp}
-      </div>
-      `,
-    });
-
-    // update code in database
-    await loginRegisterService.updateUserCode(otp, req.body.email);
-
-    console.log(">>> END SENDING EMAIL...");
-  } catch (error) {
-    console.log("🏆 ~ sendCode ~ error:", error);
-  }
-
-  return res.status(200).json({
+  res.status(200).json({
     EC: 0,
     DT: {
       email: req.body.email,
     },
   });
+
+  console.log(">>> START SENDING EMAIL....");
+  // send mail with defined transport object
+  try {
+    await transporter.sendMail({
+      from: `"Vũ đẹp trai 👻" <${process.env.GOOGLE_APP_EMAIL}>`, // sender address
+      to: req.body.email, // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "Hello world?", // plain text body
+      html: htmlToSend,
+    });
+
+    // update code in database
+    await loginRegisterService.updateUserCode(otp, req.body.email);
+
+    console.log(">>> END SENDING EMAIL....");
+  } catch (error) {
+    console.log("🏆 ~ sendCode ~ error:", error);
+  }
 };
 
 module.exports = {
